@@ -39,7 +39,7 @@ exports.UserSignUp = async (req, res) => {
          if(err.code === 11000) 
            return res.status(400).json({msg:'Email Already Exists please login !!!'}) 
            
-          res.status(400).json('something error with server !!!') 
+          res.status(500).json('something error with server !!!') 
        }
         
 }
@@ -77,7 +77,7 @@ exports.UserLogin =async (req,res) => {
 
        }catch(err){
         console.log(err);
-        res.status(400).json('server error');
+        res.status(500).json('server error');
        }
      
 }
@@ -88,12 +88,10 @@ exports.UserLogin =async (req,res) => {
 exports.UserProfile = async (req, res) => {
         
     try{
-        let token = req.headers.authorization;
-        let email = jwt.verify(token,process.env.ACCESS_KEY);   
-        
-        let userprofile = await UserSchema.findOne({ email: email.email });       
+        let headers = req.email; 
+         
+        let userprofile = await UserSchema.findOne({ email:headers});       
            
-        
         res.status(200).json({
             msg: 'user profile',
             profile:userprofile
@@ -101,26 +99,10 @@ exports.UserProfile = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status(400).json('server error'); 
+        res.status(500).json('server error'); 
      }  
     
  }
-
-
-// let dob = new Date('1995-02-03');
-// console.log(dob)
-// let dobDays = dob.getDate();
-// let dobMonth = dob.getMonth();
-// let dobYear = dob.getFullYear();
-
-// let curr = new Date();
-
-// let currDays = curr.getDate();
-// let currMonth = curr.getMonth();
-// let currYear = curr.getFullYear();
-
-// console.log(dobDays, " ", dobMonth, " ", dobYear);
-// console.log(currDays, " ", currMonth, " ", currYear);
 
 
 
