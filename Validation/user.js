@@ -1,28 +1,30 @@
 const JOI = require('joi');
 const Joi=require('joi').extend(require('@joi/date'))
-
-exports.SignUpValidation = (data) => {
+const { body,check } = require('express-validator');
+exports.SignUpValidation =() => {
       
-    const Schema =JOI.object({
-        name: JOI.string().min(3).message('please enter valid name'),
-        mail: JOI.string().min(5).email(),
-        password: JOI.string().min(6).required(),
-        dob:Joi.date().format('YYYY-MM-DD').utc()
-    })
-    
-    return Schema.validate(data);
-
+    return [
+         body('mail').isEmail().withMessage('please enter valid email'),
+         body('name').isString().isLength({ min: 2 }).withMessage('please enter valid name'),
+         body('password').isString().isLength({ min: 6 }).withMessage('password length too short'),
+         check('dob').trim().isDate().withMessage('please enter valid DOB')
+       ]  
 }
 
-exports.LoginValidation = (data) => {
+exports.LoginValidation = () => {
       
-    const Schema =JOI.object({
-        mail: JOI.string().min(5).email(),
-        password: JOI.string().min(6).required()
-    })
-    
-    return Schema.validate(data);
-
+    return [
+        body('mail').isEmail().withMessage('please enter valid email'),
+        body('password').isString().isLength({min:6}).withMessage('password length too short ') 
+      ]
 }
 
+
+exports.UpdateValidation = () => {
+     
+    return [
+       body('name').isLength({min:2}).withMessage('please enter valid name'),
+       body('dob').isDate().withMessage('please enter valid DOB')
+      ] 
+}
 

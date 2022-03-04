@@ -36,11 +36,10 @@ exports.UserSignUp = async (req, res) => {
           res.status(200).json('user register sucessfully...');  
       
       } catch (err) {
-          console.log(err);
-         if(err.code === 11000) 
+          if(err.code === 11000) 
            return res.status(400).json({msg:'Email Already Exists please login !!!'}) 
            
-          res.status(500).json('something error with server !!!') 
+        res.status(500).json({ error: err.message }); 
        }
         
 }
@@ -74,14 +73,13 @@ exports.UserLogin =async (req,res) => {
 
 
        } catch(err){
-        console.log(err);
-        res.status(500).json('server error');
+          res.status(500).json({error:err.message});
        }
      
 }
 
 // View UserProfile
-// Get Request ==> /api/user/viewProfile
+// Get Request ==> /api/user/profile
 
 exports.UserProfile = async (req, res) => {
         
@@ -103,7 +101,7 @@ exports.UserProfile = async (req, res) => {
  }
 
 // update profile name
-// PUT Request==> /api/user/updateProfile
+// PUT Request==> /api/user/update
 exports.UpdateProfile =async(req, res) => {
       
     try{
@@ -129,7 +127,7 @@ exports.UpdateProfile =async(req, res) => {
 
 
 // delete profile name
-// Delete Request ==> /api/user/deleteProfile/:id
+// Delete Request ==> /api/user/delete/:id
 exports.DeleteProfile =async (req,res) => {
     
     try {
