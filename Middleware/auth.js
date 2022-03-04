@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     try {
         let token = req.headers.authorization;
         let email = jwt.verify(token,process.env.ACCESS_KEY);
-        req.email = email;    
+        req.email = email.email;    
         next();  
     }catch (err) {
         console.log(err);

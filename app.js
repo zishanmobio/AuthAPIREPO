@@ -1,12 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-require('dotenv').config();
 const mongoose = require('mongoose');
 const port =process.env.PORT || 8082;
 const multer = require('multer');
 const path = require('path');
 const UserRoute = require('./Route/userRoute'); 
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null,'upload')

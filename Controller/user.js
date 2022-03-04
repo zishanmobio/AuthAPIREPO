@@ -1,33 +1,34 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
-const {SignUpValidation,LoginValidation} = require('../Validation/user');
+// const { SignUpValidation, LoginValidation } = require('../Validation/user');
 const UserSchema = require('../Modal/user');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+
+const {validationResult} = require('express-validator');
+
 
 // User SignUp  
 // Post Request ==> /api/user/register/
 exports.UserSignUp = async (req, res) => {
       
     try {
-        console.log(req.body);
-         let Validate = SignUpValidation(req.body);      
-           if (Validate.error) {
-              console.log(Validate.error);   
-              return res.status(200).json({
-                 msg:Validate.error.details[0].message 
-              }) 
-           }    
-          if(!req.file)
-              return res.status(400).json('error occured in file upload'); 
+         console.log(req.body);
+         let Validate = validationResult(req);      
+                    
+        if (!Validate.isEmpty()) {
+            console.log(Validate.array());    
+            return res.status(200).json(Validate.array()[0].msg);
+        }
+          
+        //   if (!req.file)
+        //       return res.status(400).json('error occured in file upload'); 
           
           let hashpass = bcrypt.hashSync(req.body.password,8); 
-          let filepath=`upload/${req.file.filename}`  
-             
+         
             let userprofile = new UserSchema({
                 email: req.body.mail,
                 name: req.body.name,
                 password: hashpass,
-                ImageUrl: filepath,
                 DOB:new Date(req.body.dob)
             })  
               
@@ -48,14 +49,12 @@ exports.UserSignUp = async (req, res) => {
 // Post Request ==> /api/user/login/
 exports.UserLogin =async (req,res) => {
      
-
     try {
-        
-        let Validate = LoginValidation(req.body);
-        console.log(req.body); 
-        if (Validate.error) {
-            console.log(Validate.error);  
-            return res.status(400).json('please enter valid input');  
+        let Validate = validationResult(req);
+        // console.log(req.body); 
+        if (!Validate.isEmpty()) {
+            // console.log(Validate.error);  
+            return res.status(400).json(Validate.array()[0].msg);  
         }
         let userprofile = await UserSchema.findOne({ email: req.body.mail });  
           
@@ -68,14 +67,13 @@ exports.UserLogin =async (req,res) => {
               
             let token = jwt.sign({ email: userprofile.email },process.env.ACCESS_KEY, { expiresIn: '1h', algorithm: 'HS256' }); 
             
-            res.set('token', token);   
             res.status(200).json(token);
             
         }else
           res.status(200).json('please enter correct password');   
 
 
-       }catch(err){
+       } catch(err){
         console.log(err);
         res.status(500).json('server error');
        }
@@ -83,7 +81,7 @@ exports.UserLogin =async (req,res) => {
 }
 
 // View UserProfile
-// Get Request ==> /api/user/profile
+// Get Request ==> /api/user/viewProfile
 
 exports.UserProfile = async (req, res) => {
         
@@ -104,7 +102,47 @@ exports.UserProfile = async (req, res) => {
     
  }
 
+// update profile name
+// PUT Request==> /api/user/updateProfile
+exports.UpdateProfile =async(req, res) => {
+      
+    try{
+           
+        let Validate = validationResult(req);  
+        
+        if(!Validate.isEmpty()){ 
+            
+            return res.status(400).json(Validate.array()[0].msg); 
+         }   
+         
+        let updateUser = await UserSchema.updateOne({ email: { $eq: req.email } },{$set:{ name: req.body.name, DOB: req.body.dob } });
+        console.log("user updated",updateUser.modifiedCount);  
+          
+        res.status(200).json('user profile updated successfully...'); 
+
+      } catch (err) {
+
+        res.status(500).json({ error: err.message});   
+     }
+
+}
 
 
+// delete profile name
+// Delete Request ==> /api/user/deleteProfile/:id
+exports.DeleteProfile =async (req,res) => {
+    
+    try {
+        let id = req.params.id;  
+        
+        let userDeleted = await UserSchema.deleteOne({ $and: [{ email: { $eq: req.email } }, { _id: id }] });  
+        console.log(userDeleted.deletedCount);   
+         
+        res.status(200).json('user deleted successfully...'); 
 
+    } catch (err) {
+        res.status(500).json({ error: err.message });  
+     }
+ 
+}
 
