@@ -116,7 +116,7 @@ exports.UpdateProfile =async(req, res) => {
         let updateUser = await UserSchema.updateOne({ email: { $eq: req.email } },{$set:{ name: req.body.name, DOB: req.body.dob } });
         console.log("user updated",updateUser.modifiedCount);  
           
-        res.status(200).json('user profile updated successfully...'); 
+        res.status(200).json('user profile updated successfully'); 
 
       } catch (err) {
 
@@ -136,7 +136,7 @@ exports.DeleteProfile =async (req,res) => {
         let userDeleted = await UserSchema.deleteOne({ $and: [{ email: { $eq: req.email } }, { _id: id }] });  
         console.log(userDeleted.deletedCount);   
          
-        res.status(200).json('user deleted successfully...'); 
+        res.status(200).json('user deleted successfully'); 
 
     } catch (err) {
         res.status(500).json({ error: err.message });  
