@@ -1,7 +1,6 @@
-const JOI = require('joi');
-const Joi=require('joi').extend(require('@joi/date'))
 const { body,check } = require('express-validator');
-exports.SignUpValidation =() => {
+
+exports.SignUpValidation = () => {
       
     return [
          body('mail').isEmail().withMessage('please enter valid email'),
