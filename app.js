@@ -7,7 +7,7 @@ const port =process.env.PORT || 8082;
 const multer = require('multer');
 const path = require('path');
 const UserRoute = require('./Route/userRoute'); 
-
+const url = "mongodb://localhost:27017/AuthDB";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null,'upload')
@@ -31,8 +31,6 @@ const filefilter = (req, file, cb) => {
 }
 
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
-
-
 // app.use(bodyParser.urlencoded({ extended:false}))
 // app.use(bodyParser.json());
 app.use(express.json());
@@ -51,18 +49,20 @@ app.use(multer({
 }).single('image'));
 
 app.use('/api/user',UserRoute);
+app.use('/api/product', require('./Route/prodRoute'));
 
-mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true })
-    .then(result => {
-       
-        // console.log("database connected successfully") 
-        app.listen(port, (err) => {
-            if (err) {
-                console.log("something error in server", err);
-                return;
-            }
-            console.log(`server running on port no ${port}`);
-        });
-    })
-   .catch(err => console.log(`Error in DB Connection ${err}`));
+mongoose.connect(url, {
+  useNewUrlParser: true,
+});
+let db = mongoose.connection;
+db.on("error", function (err) {
+  console.error("connection error:", err);
+});
  
+app.listen(port, (err) => {
+  if(err) {
+    console.log("something error in server", err);
+    return;
+  }
+  console.log(`server running on port no ${port}`);
+});  

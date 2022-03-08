@@ -20,15 +20,15 @@ exports.UserSignUp = async (req, res) => {
             return res.status(200).json(Validate.array()[0].msg);
         }
           
-        //   if (!req.file)
-        //       return res.status(400).json('error occured in file upload'); 
-          
+           
+            
           let hashpass = bcrypt.hashSync(req.body.password,8); 
          
             let userprofile = new UserSchema({
                 email: req.body.mail,
                 name: req.body.name,
                 password: hashpass,
+                role:req.body.role !==undefined ? 'admin' : 'user',
                 DOB:new Date(req.body.dob)
             })  
               
@@ -143,4 +143,6 @@ exports.DeleteProfile =async (req,res) => {
      }
  
 }
+
+
 
