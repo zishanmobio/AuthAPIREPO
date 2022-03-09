@@ -64,7 +64,7 @@ exports.UserLogin =async (req,res) => {
             
         if (isCorrect) {
               
-            let token = jwt.sign({ email: userprofile.email },process.env.ACCESS_KEY, { expiresIn: '1h', algorithm: 'HS256' }); 
+            let token = jwt.sign({ email: userprofile.email },process.env.ACCESS_KEY, { expiresIn: '12h', algorithm: 'HS256' }); 
             
             res.status(200).json(token);
             

@@ -14,4 +14,5 @@ route.put('/update', Middleware,UpdateValidation(),UserController.UpdateProfile)
 
 route.delete('/delete/:id', Middleware, UserController.DeleteProfile);
 
+
 module.exports = route;

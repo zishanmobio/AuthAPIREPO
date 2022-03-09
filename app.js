@@ -48,8 +48,10 @@ app.use(multer({
     fileFilter: filefilter
 }).single('image'));
 
-app.use('/api/user',UserRoute);
-app.use('/api/product', require('./Route/prodRoute'));
+// app.use('/api/user',UserRoute);
+// app.use('/api/product', require('./Route/prodRoute'));
+require('./Route/index')(app);
+
 
 mongoose.connect(url, {
   useNewUrlParser: true,
