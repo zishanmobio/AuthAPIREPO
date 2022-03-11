@@ -14,7 +14,12 @@ const UserSchema = new Mongoose.Schema({
        type: String,
        required: true, 
     },
-    ImageUrl:String,
+    role:String,
+    ImageUrl: String,
+    product: [{
+        type: Mongoose.Schema.Types.ObjectId,
+        ref:'product' 
+    }],
     DOB:{
       type:Date  
     }
