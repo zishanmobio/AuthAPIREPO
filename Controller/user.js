@@ -49,13 +49,15 @@ exports.UserSignUp = async (req, res) => {
 exports.UserLogin =async (req,res) => {
      
     try {
+
+        let test="putting sample text for testing purpose"
         let Validate = validationResult(req);
         // console.log(req.body); 
         if (!Validate.isEmpty()) {
             // console.log(Validate.error);  
             return res.status(400).json(Validate.array()[0].msg);  
         }
-        let userprofile = await UserSchema.findOne({ email:{$eq:req.body.mail }});  
+        let userprofile = await UserSchema.findOne({ email:req.body.mail});  
           
         if(!userprofile)
           return res.status(400).json('no user profile found')      
