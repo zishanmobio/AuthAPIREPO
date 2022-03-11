@@ -45,7 +45,7 @@ exports.AdminLogin = async (req,res) => {
          }          
          
        
-      let admin = await UserSchema.findOne({ email: req.body.mail, role: 'admin' });
+        let admin = await UserSchema.findOne({ $and: [{ email:{$eq:req.body.mail }},{role:{$eq:'admin'}}]});
                 
         if (!admin)
             return res.status(400).json({msg:'no admin account exists.'});
