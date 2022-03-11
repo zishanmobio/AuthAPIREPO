@@ -131,9 +131,9 @@ exports.DeleteProductByID = async(req,res)=>{
         await ProdSchema.deleteOne({ $and: [{ _id: id },{ email: req.email }] }); 
         
         let prodlist = user.product.filter((prod) => prod._id != id);
-        let prod = user.product.find((prod) => prod._id == id);
+        let isexists = user.product.find((prod) => prod._id == id);
          
-        if (prod) { 
+        if (isexists) { 
            DeleteFile(prod.prodUrl);
          }
         user.product = prodlist;
