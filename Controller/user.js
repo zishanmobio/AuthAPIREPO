@@ -56,7 +56,7 @@ exports.UserLogin =async (req,res) => {
             // console.log(Validate.error);  
             return res.status(400).json(Validate.array()[0].msg);  
         }
-        let userprofile = await UserSchema.findOne({ email:{$eq:req.body.mail}});  
+        let userprofile = await UserSchema.findOne({ email:{$eq:req.body.mail.toString()}});  
           
         if(!userprofile)
           return res.status(400).json('no user profile found')      
