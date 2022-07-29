@@ -20,15 +20,15 @@ exports.UserSignUp = async (req, res) => {
             return res.status(200).json(Validate.array()[0].msg);
         }
           
-        //   if (!req.file)
-        //       return res.status(400).json('error occured in file upload'); 
-          
+           
+            
           let hashpass = bcrypt.hashSync(req.body.password,8); 
          
             let userprofile = new UserSchema({
                 email: req.body.mail,
                 name: req.body.name,
                 password: hashpass,
+                role:req.body.role !==undefined ? 'admin' : 'user',
                 DOB:new Date(req.body.dob)
             })  
               
@@ -49,13 +49,14 @@ exports.UserSignUp = async (req, res) => {
 exports.UserLogin =async (req,res) => {
      
     try {
+
         let Validate = validationResult(req);
         // console.log(req.body); 
         if (!Validate.isEmpty()) {
             // console.log(Validate.error);  
             return res.status(400).json(Validate.array()[0].msg);  
         }
-        let userprofile = await UserSchema.findOne({ email: req.body.mail });  
+        let userprofile = await UserSchema.findOne({ email:{$eq:req.body.mail.toString()}});  
           
         if(!userprofile)
           return res.status(400).json('no user profile found')      
@@ -64,7 +65,7 @@ exports.UserLogin =async (req,res) => {
             
         if (isCorrect) {
               
-            let token = jwt.sign({ email: userprofile.email },process.env.ACCESS_KEY, { expiresIn: '1h', algorithm: 'HS256' }); 
+            let token = jwt.sign({ email: userprofile.email },process.env.ACCESS_KEY, { expiresIn: '12h', algorithm: 'HS256' }); 
             
             res.status(200).json(token);
             
@@ -116,7 +117,7 @@ exports.UpdateProfile =async(req, res) => {
         let updateUser = await UserSchema.updateOne({ email: { $eq: req.email } },{$set:{ name: req.body.name, DOB: req.body.dob } });
         console.log("user updated",updateUser.modifiedCount);  
           
-        res.status(200).json('user profile updated successfully...'); 
+        res.status(200).json('user profile updated successfully'); 
 
       } catch (err) {
 
@@ -136,11 +137,13 @@ exports.DeleteProfile =async (req,res) => {
         let userDeleted = await UserSchema.deleteOne({ $and: [{ email: { $eq: req.email } }, { _id: id }] });  
         console.log(userDeleted.deletedCount);   
          
-        res.status(200).json('user deleted successfully...'); 
+        res.status(200).json('user deleted successfully'); 
 
     } catch (err) {
         res.status(500).json({ error: err.message });  
      }
  
 }
+
+
 

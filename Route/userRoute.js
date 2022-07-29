@@ -1,8 +1,9 @@
 const route = require('express').Router();
 const UserController = require('../Controller/user');
 const Middleware = require('../Middleware/auth');
-const {body,check } = require('express-validator');
-const {SignUpValidation,LoginValidation,UpdateValidation}=require('../Validation/user')
+
+const { SignUpValidation, LoginValidation, UpdateValidation } = require('../Validation/user');
+
 route.post('/register',SignUpValidation(),UserController.UserSignUp);
 
 route.post('/login',LoginValidation(),UserController.UserLogin);

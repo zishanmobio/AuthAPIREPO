@@ -1,10 +1,9 @@
-const JOI = require('joi');
-const Joi=require('joi').extend(require('@joi/date'))
 const { body,check } = require('express-validator');
-exports.SignUpValidation =() => {
+
+exports.SignUpValidation = () => {
       
     return [
-         body('mail').isEmail().withMessage('please enter valid email'),
+         body('mail').isEmail().isString().withMessage('please enter valid email'),
          body('name').isString().isLength({ min: 2 }).withMessage('please enter valid name'),
          body('password').isString().isLength({ min: 6 }).withMessage('password length too short'),
          check('dob').trim().isDate().withMessage('please enter valid DOB')

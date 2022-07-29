@@ -1,2 +1,8 @@
 node_modules
 package-lock.json
+docs
+upload
+notification
+demo_documents
+firebaseConfig
+scratch
