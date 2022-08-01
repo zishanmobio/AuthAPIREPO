@@ -7,7 +7,7 @@ const port = process.env.PORT || 8082;
 const multer = require('multer');
 const path = require('path');
 const UserRoute = require('./Route/userRoute');
-const url = 'mongodb://localhost:27017/AuthDB';
+const url = `mongodb+srv://AuthTest:H4zX4BubtyHaooJm@cluster0.412ks.mongodb.net/AuthDB?retryWrites=true&w=majority`;
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, 'upload');
