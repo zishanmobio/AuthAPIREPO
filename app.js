@@ -4,34 +4,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const mongoose = require('mongoose');
 const port = process.env.PORT || 8082;
-const multer = require('multer');
 const path = require('path');
 const UserRoute = require('./Route/userRoute');
 const url = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.412ks.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'upload');
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    },
-});
 
-const filefilter = (req, file, cb) => {
-    if (
-        file.mimetype === 'image/png' ||
-        file.mimetype === 'image/jpg' ||
-        file.minetype === 'image/jpeg'
-    ) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-};
-
-app.use('/upload', express.static(path.join(__dirname, 'upload')));
-// app.use(bodyParser.urlencoded({ extended:false}))
-// app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -44,16 +20,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(
-    multer({
-        dest: 'upload/',
-        storage: storage,
-        fileFilter: filefilter,
-    }).single('image')
-);
-
-// app.use('/api/user',UserRoute);
-// app.use('/api/product', require('./Route/prodRoute'));
 app.get('/', (req, res) => {
     res.status(200).send(`<h4>Welcome to AuthAPI testing</h4>`);
 });
