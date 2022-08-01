@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    res.status(200).send(`<h4>Welcome to AuthAPI testing</h4>`);
+    res.status(200).send(`<h4>Welcome to Testing AuthAPI testing</h4>`);
 });
 require('./Route/index')(app);
 
